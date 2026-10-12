@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Holy Child School - Class 1 Mathematics Online Examination & Certificate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Fredoka:wght@400;500;600;700&family=Great+Vibes&family=Quicksand:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      touch-action: manipulation;
+    }
+    .font-fun {
+      font-family: 'Fredoka', cursive, sans-serif;
+    }
+    .font-formal {
+      font-family: 'Cinzel', serif;
+    }
+    .font-serif-title {
+      font-family: 'Playfair Display', serif;
+    }
+    .font-signature {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    /* Screen-only certificate preview */
+    .certificate-card {
+      background: radial-gradient(circle at center, #ffffff 0%, #fffdf7 70%, #fef3c7 100%);
+      border: 12px double #b45309;
+      box-shadow: inset 0 0 25px rgba(180, 83, 9, 0.12), 0 20px 30px -10px rgba(0,0,0,0.15);
+    }
+
+    /* Strict A4 Print Formatting: Exactly 1 Page (Landscape) */
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    @media print {
+      html, body {
+        width: 297mm !important;
+        height: 210mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        background: #ffffff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Hide everything except print certificate container */
+      #screen-content, 
+      #resultModal, 
+      .no-print {
+        display: none !important;
+      }
+
+      #print-certificate-container {
+        display: flex !important;
+        visibility: visible !important;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 297mm !important;
+        height: 210mm !important;
+        max-width: 297mm !important;
+        max-height: 210mm !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        box-sizing: border-box !important;
+        page-break-before: avoid !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        overflow: hidden !important;
+        background: #ffffff !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      .a4-print-card {
+        width: 100% !important;
+        height: 100% !important;
+        border: 10px double #b45309 !important;
+        box-sizing: border-box !important;
+        padding: 7mm 12mm !important;
+        background: #ffffff !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-teal-50 via-sky-50 to-amber-50 min-h-screen text-slate-800 antialiased p-3 sm:p-6 md:p-8">
+
+  <!-- ==================== MAIN SCREEN CONTENT ==================== -->
+  <div id="screen-content" class="max-w-4xl mx-auto">
+    <!-- Header with Holy Child School Branding -->
+    <header class="bg-white rounded-3xl shadow-xl border-4 border-teal-300 p-4 sm:p-6 mb-6 relative overflow-hidden">
+      <div class="absolute -top-8 -right-8 w-28 h-28 bg-amber-200 rounded-full opacity-40 pointer-events-none"></div>
+      <div class="absolute -bottom-8 -left-8 w-28 h-28 bg-teal-200 rounded-full opacity-40 pointer-events-none"></div>
+
+      <div class="relative z-10">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b-2 border-dashed border-teal-100 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-tr from-amber-400 to-teal-600 rounded-2xl flex items-center justify-center text-white text-3xl shadow-md border-2 border-white">
+              🔢
+            </div>
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-0.5 bg-teal-100 text-teal-900 rounded-full text-xs font-bold uppercase tracking-wider mb-1">
+                ⭐ Annual Examination • 2026
+              </div>
+              <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-teal-950 font-fun tracking-wide">
+                HOLY CHILD SCHOOL
+              </h1>
+              <p class="text-sm sm:text-base text-slate-600 font-semibold">Class 1 Mathematics Online Examination (Total Marks: 100)</p>
+            </div>
+          </div>
+
+          <!-- Interactive 60-Min Timer -->
+          <div class="flex flex-row md:flex-col items-center justify-between md:items-end gap-2 bg-amber-50 border-2 border-amber-300 rounded-2xl p-3 px-4 shadow-sm">
+            <div class="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1">
+              <span>⏳ Time Left</span>
+            </div>
+            <div id="timerDisplay" class="text-3xl font-black text-rose-600 font-fun tracking-wider">
+              60:00
+            </div>
+            <div class="flex items-center gap-1.5 no-print">
+              <button id="timerToggleBtn" onclick="toggleTimer()" class="px-2.5 py-1 text-xs font-bold bg-white border border-amber-300 hover:bg-amber-100 rounded-lg text-amber-900 transition">
+                Pause
+              </button>
+              <button onclick="resetTimer()" class="px-2.5 py-1 text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 rounded-lg text-slate-700 transition">
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Information Input -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-4">
+          <div class="bg-teal-50/70 border border-teal-200 rounded-xl p-2.5">
+            <label class="block text-xs font-bold text-teal-900 mb-1" for="studentName">Student Name 👧👦</label>
+            <input id="studentName" type="text" placeholder="Full Name..." class="w-full bg-white border border-teal-300 rounded-lg px-2.5 py-1.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-400">
+          </div>
+          <div class="bg-sky-50/70 border border-sky-200 rounded-xl p-2.5">
+            <label class="block text-xs font-bold text-sky-900 mb-1" for="studentRoll">Roll No / ID 🎫</label>
+            <input id="studentRoll" type="text" placeholder="Roll Number..." class="w-full bg-white border border-sky-300 rounded-lg px-2.5 py-1.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400">
+          </div>
+          <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-2.5">
+            <label class="block text-xs font-bold text-amber-900 mb-1" for="studentSection">Section 🏷️</label>
+            <select id="studentSection" class="w-full bg-white border border-amber-300 rounded-lg px-2 py-1.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+              <option value="C">Section C</option>
+            </select>
+          </div>
+          <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-2.5 flex items-center justify-around">
+            <div class="text-center">
+              <span class="block text-[10px] font-bold text-emerald-800 uppercase">Total Marks</span>
+              <span class="text-base font-black text-emerald-700 font-fun">100 Pts</span>
+            </div>
+            <div class="w-px h-8 bg-emerald-200"></div>
+            <div class="text-center">
+              <span class="block text-[10px] font-bold text-emerald-800 uppercase">Questions</span>
+              <span class="text-base font-black text-emerald-700 font-fun">39 Qs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Progress Status Bar -->
+    <div class="sticky top-2 z-30 mb-6 no-print">
+      <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border-2 border-teal-200 p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="w-full sm:w-1/2">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-700 mb-1">
+            <span>Exam Completion</span>
+            <span id="progressText" class="text-teal-700 font-bold">0 / 39 Answered</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden border border-slate-200">
+            <div id="progressBar" class="bg-gradient-to-r from-teal-400 via-sky-400 to-amber-500 h-full rounded-full transition-all duration-300 w-0"></div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <button onclick="speakText('Welcome to Holy Child School Class 1 Mathematics Examination. Press the sound button to hear any math question!')" class="flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-400 hover:bg-amber-300 active:scale-95 text-amber-950 font-bold rounded-xl text-xs sm:text-sm shadow-sm transition">
+            <span>🔊</span>
+            <span>Teacher Voice Help</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exam Sections Container (A through H) -->
+    <div class="space-y-10" id="sectionsContainer">
+      <!-- Section A: Mental Math -->
+      <section class="section-card bg-white rounded-3xl p-5 sm:p-7 border-4 border-sky-200 shadow-md">
+        <div class="flex items-center justify-between border-b-2 border-sky-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-sky-600 text-white rounded-xl font-fun font-bold text-sm">Section A</span>
+            <h2 class="text-xl sm:text-2xl font-black text-sky-950 font-fun">Mental Math & Number Sense (10 Marks)</h2>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-sky-700 bg-sky-50 px-3 py-1 rounded-full">10 Qs × 1 Mark</span>
+        </div>
+        <div id="sectionA_container" class="space-y-4"></div>
+      </section>
+
+      <!-- Section B: Addition -->
+      <section class="section-card bg-white rounded-3xl p-5 sm:p-7 border-4 border-emerald-200 shadow-md">
+        <div class="flex items-center justify-between border-b-2 border-emerald-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-emerald-600 text-white rounded-xl font-fun font-bold text-sm">Section B</span>
+            <h2 class="text-xl sm:text-2xl font-black text-emerald-950 font-fun">Basic Addition ➕ (10 Marks)</h2>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">5 Qs × 2 Marks</span>
+        </div>
+        <div id="sectionB_container" class="space-y-4"></div>
+      </section>
+
+      <!-- Section C: Subtraction -->
+      <section class="section-card bg-white rounded-3xl p-5 sm:p-7 border-4 border-rose-200 shadow-md">
+        <div class="flex items-center justify-between border-b-2 border-rose-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-rose-600 text-white rounded-xl font-fun font-bold text-sm">Section C</span>
+            <h2 class="text-xl sm:text-2xl font-black text-rose-950 font-fun">Basic Subtraction ➖ (10 Marks)</h2>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-rose-700 bg-rose-50 px-3 py-1 rounded-full">5 Qs × 2 Marks</span>
+        </div>
+        <div id="sectionC_container" class="space-y-4"></div>
+      </section>
+
+      <!-- Section D: Shapes -->
+      <section class="section-card bg-white rounded-3xl p-5 sm:p-7 border-4 border-purple-200 shadow-md">
+        <div class="flex items-center justify-between border-b-2 border-purple-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-purple-600 text-white rounded-xl font-fun font-bold text-sm">Section D</span>
+            <h2 class="text-xl sm:text-2xl font-black text-purple-950 font-fun">Shapes & Spatial Concepts 🔺 (10 Marks)</h2>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">5 Qs × 2 Marks</span>
+        </div>
+        <div id="sectionD_container" class="space-y-4"></div>
+      </section>
+
+      <!-- Section E: Time & Clock -->
+      <section class="section-card bg-white rounded-3xl p-5 sm:p-7 border-4 border-amber-200 shadow-md">
+        <div class="flex items-center justify-between border-b-2 border-amber-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-amber-600 text-white rounded-xl font-fun font-bold text-sm">Section E</span>
+            <h2 class="text-xl sm:text-2xl font-black text-amber-950 font-fun">Time, Clock & Calendar ⏰ (20 Marks)</h2>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full">5 Qs × 4 Marks</span>
+        </div>
+        <div id="sectionE_container" class="space-y-4"></div>
+      </section>
+
+      <!-- Section F: Measurement -->
+      <section class="section-card bg-white rounded-3xl p-5 sm:p-7 border-4 border-cyan-200 shadow-md">
+        <div class="flex items-center justify-between border-b-2 border-cyan-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-cyan-600 text-white rounded-xl font-fun font-bold text-sm">Section F</span>
+            <h2 class="text-xl sm:text-2xl font-black text-cyan-950 font-fun">Measurement & Comparisons 📏 (10 Marks)</h2>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-cyan-700 bg-cyan-50 px-3 py-1 rounded-full">5 Qs × 2 Marks</span>
+        </div>
+        <div id="sectionF_container" class="space-y-4"></div>
+      </section>
+
+      <!-- Section G: Money -->
+      <section class="section-card bg-white rounded-3xl p-5 sm:p-7 border-4 border-teal-200 shadow-md">
+        <div class="flex items-center justify-between border-b-2 border-teal-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-teal-600 text-white rounded-xl font-fun font-bold text-sm">Section G</span>
+            <h2 class="text-xl sm:text-2xl font-black text-teal-950 font-fun">Money & Currency 🪙 (10 Marks)</h2>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full">5 Qs × 2 Marks</span>
+        </div>
+        <div id="sectionG_container" class="space-y-4"></div>
+      </section>
+
+      <!-- Section H: Word Problems -->
+      <section class="section-card bg-white rounded-3xl p-5 sm:p-7 border-4 border-indigo-200 shadow-md">
+        <div class="flex items-center justify-between border-b-2 border-indigo-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-indigo-600 text-white rounded-xl font-fun font-bold text-sm">Section H</span>
+            <h2 class="text-xl sm:text-2xl font-black text-indigo-950 font-fun">Story & Word Problems 📖 (20 Marks)</h2>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">4 Qs × 5 Marks</span>
+        </div>
+        <div id="sectionH_container" class="space-y-4"></div>
+      </section>
+    </div>
+
+    <!-- Exam Submission Card -->
+    <div class="bg-white rounded-3xl border-4 border-teal-300 shadow-2xl p-6 sm:p-8 text-center no-print mt-10 mb-12">
+      <h3 class="text-2xl sm:text-3xl font-black text-teal-950 font-fun mb-2">Done with all Math Problems? 🚀</h3>
+      <p class="text-slate-600 text-sm sm:text-base max-w-lg mx-auto mb-6">
+        Verify that you entered your Name and Roll Number. Pressing Submit will calculate your total score out of 100 and award your official single-page A4 Certificate!
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button id="submitBtn" onclick="submitExam()" class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-fun text-xl font-bold rounded-2xl shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
+          <span>🎓</span>
+          <span>Submit Math Exam & Get Certificate</span>
+        </button>
+        <button onclick="resetAnswers()" class="w-full sm:w-auto px-6 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl transition active:scale-95">
+          Clear Answers 🔄
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== RESULT MODAL (ON SCREEN ONLY) ==================== -->
+  <div id="resultModal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-teal-500 w-full max-w-4xl max-h-[95vh] overflow-y-auto p-4 sm:p-8 relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xl font-bold no-print">
+        ✕
+      </button>
+
+      <!-- Score Header -->
+      <div class="text-center pb-6 border-b border-slate-200 no-print">
+        <div id="modalBadge" class="text-5xl mb-1 animate-bounce">🏆</div>
+        <h2 class="text-3xl font-black text-teal-950 font-fun">Holy Child School Examination Report</h2>
+        <p id="modalStudentTitle" class="text-slate-600 font-bold text-lg mt-1"></p>
+
+        <div class="inline-flex items-center gap-6 bg-gradient-to-r from-teal-50 via-sky-50 to-amber-50 border-2 border-teal-200 rounded-3xl px-8 py-3 my-4">
+          <div>
+            <span class="block text-xs font-bold text-slate-500 uppercase">Marks</span>
+            <span id="modalMarksObtained" class="text-4xl font-black text-teal-700 font-fun">0 / 100</span>
+          </div>
+          <div class="w-px h-10 bg-teal-200"></div>
+          <div>
+            <span class="block text-xs font-bold text-slate-500 uppercase">Percentage</span>
+            <span id="modalPercentage" class="text-4xl font-black text-emerald-600 font-fun">0%</span>
+          </div>
+          <div class="w-px h-10 bg-teal-200"></div>
+          <div>
+            <span class="block text-xs font-bold text-slate-500 uppercase">Grade</span>
+            <span id="modalGrade" class="text-4xl font-black text-amber-500 font-fun">A+</span>
+          </div>
+        </div>
+
+        <div id="modalStars" class="text-3xl tracking-widest text-amber-400 mb-1">⭐⭐⭐⭐⭐</div>
+        <p id="modalFeedback" class="text-sm font-semibold text-slate-700"></p>
+      </div>
+
+      <!-- Certificate Preview Container on Screen -->
+      <div class="my-6">
+        <div class="certificate-card p-6 sm:p-8 rounded-2xl relative text-center">
+          <div class="mb-2">
+            <div class="text-amber-800 font-formal text-xs tracking-widest uppercase font-bold">Government Recognized Primary Institution</div>
+            <h1 class="text-2xl sm:text-3xl font-formal text-teal-950 font-bold tracking-wider mt-1">HOLY CHILD SCHOOL</h1>
+            <p class="text-[11px] text-slate-500 tracking-wider uppercase font-semibold">Excellence in Mathematics & Primary Foundations</p>
+            <div class="w-24 h-0.5 bg-amber-600 mx-auto my-2 rounded-full"></div>
+          </div>
+
+          <h2 class="text-2xl font-signature text-amber-700 mb-1">Certificate of Mathematical Achievement</h2>
+          <p class="text-xs font-medium text-slate-500 uppercase tracking-widest">This is proudly awarded to</p>
+
+          <div id="screenCertStudentName" class="text-2xl sm:text-3xl font-bold font-fun text-teal-900 border-b-2 border-dashed border-amber-400 inline-block px-6 py-1 my-2">
+            Child Name
+          </div>
+
+          <p class="text-xs sm:text-sm text-slate-700 max-w-xl mx-auto leading-relaxed">
+            of <strong class="text-teal-900">Class 1 (<span id="screenCertSection">Sec A</span>)</strong>, Roll No: <strong id="screenCertRoll">12</strong> for successfully completing the <span class="font-bold text-slate-900">Annual Mathematics Examination</span> with great distinction.
+          </p>
+
+          <div class="flex items-center justify-center gap-4 my-3">
+            <div class="px-4 py-1.5 bg-teal-50 border border-teal-200 rounded-xl">
+              <span class="block text-[10px] font-bold text-teal-800 uppercase">Marks</span>
+              <span id="screenCertMarks" class="text-lg font-black text-teal-900 font-fun">96 / 100</span>
+            </div>
+            <div class="px-4 py-1.5 bg-amber-50 border border-amber-300 rounded-xl">
+              <span class="block text-[10px] font-bold text-amber-800 uppercase">Grade</span>
+              <span id="screenCertGrade" class="text-lg font-black text-amber-700 font-fun">Grade A+</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 items-end pt-4 mt-2 border-t border-amber-200 text-[11px]">
+            <div>
+              <div id="screenCertDate" class="font-bold text-slate-800 border-b border-slate-300 pb-0.5 w-24 mx-auto">Oct 12, 2026</div>
+              <span class="text-slate-500 text-[10px] block mt-0.5">Date</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-12 h-12 rounded-full border-2 border-amber-600 bg-amber-100 flex items-center justify-center text-amber-800 font-bold text-[9px] shadow-sm">
+                ★ SEAL ★
+              </div>
+              <span class="text-[9px] text-amber-900 font-bold uppercase mt-0.5">Holy Child</span>
+            </div>
+            <div>
+              <div class="font-signature text-xl text-teal-950 border-b border-slate-300 pb-0.5 w-28 mx-auto">Sister Mary</div>
+              <span class="text-slate-500 text-[10px] block mt-0.5">Principal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
+        <button onclick="triggerPrintCertificate()" class="w-full sm:w-auto px-6 py-3 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition">
+          <span>🖨️</span>
+          <span>Print A4 Certificate (Exact 1 Page)</span>
+        </button>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="toggleDetailedReview()" id="reviewToggleBtn" class="w-full sm:w-auto px-5 py-3 bg-sky-100 hover:bg-sky-200 text-sky-900 font-bold rounded-xl transition">
+            View Solution Sheet 📋
+          </button>
+          <button onclick="closeModal()" class="w-full sm:w-auto px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl transition">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Detailed Review Panel -->
+      <div id="detailedReviewContainer" class="hidden mt-6 pt-6 border-t-2 border-dashed border-slate-200 no-print">
+        <h4 class="font-fun text-xl font-bold text-slate-800 mb-3">Math Paper Detailed Corrections</h4>
+        <div id="detailedReviewList" class="space-y-2.5 max-h-96 overflow-y-auto pr-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DEDICATED A4 PRINT CERTIFICATE (STRICT 1-PAGE LANDSCAPE) ==================== -->
+  <div id="print-certificate-container" style="display: none;">
+    <div class="a4-print-card">
+      <!-- Watermark Background -->
+      <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0.04; pointer-events: none; user-select: none;">
+        <span style="font-size: 140pt;">📐</span>
+      </div>
+
+      <!-- Header Section -->
+      <div style="text-align: center; margin-bottom: 2mm; position: relative; z-index: 2;">
+        <div style="font-family: 'Cinzel', serif; font-size: 8pt; letter-spacing: 2px; color: #92400e; font-weight: 700; text-transform: uppercase;">
+          Affiliated & Recognized Primary Educational Institution
+        </div>
+        <h1 style="font-family: 'Cinzel', serif; font-size: 24pt; font-weight: 900; letter-spacing: 1.5px; color: #134e4a; margin: 1.5mm 0 0.5mm 0;">
+          HOLY CHILD SCHOOL
+        </h1>
+        <div style="font-size: 8pt; font-weight: 600; letter-spacing: 1px; color: #475569; text-transform: uppercase;">
+          Annual Academic Assessment • Primary Education Board
+        </div>
+        <div style="width: 80mm; height: 1.5px; background: #b45309; margin: 2mm auto;"></div>
+      </div>
+
+      <!-- Certificate Subtitle -->
+      <div style="text-align: center; margin-bottom: 3mm; position: relative; z-index: 2;">
+        <h2 style="font-family: 'Great Vibes', cursive; font-size: 26pt; color: #b45309; margin: 0; line-height: 1;">
+          Certificate of Mathematical Achievement
+        </h2>
+        <p style="font-size: 7.5pt; font-weight: 700; letter-spacing: 2px; color: #64748b; text-transform: uppercase; margin: 1mm 0 0 0;">
+          This is proudly presented to
+        </p>
+      </div>
+
+      <!-- Recipient Name -->
+      <div style="text-align: center; margin-bottom: 3mm; position: relative; z-index: 2;">
+        <div id="printCertStudentName" style="font-family: 'Fredoka', cursive; font-size: 22pt; font-weight: 700; color: #134e4a; border-bottom: 2px dashed #b45309; display: inline-block; padding: 0 15mm 1mm 15mm;">
+          Student Name
+        </div>
+      </div>
+
+      <!-- Citation Body -->
+      <div style="text-align: center; max-width: 220mm; margin: 0 auto 3mm auto; font-size: 10pt; line-height: 1.4; color: #334155; position: relative; z-index: 2;">
+        A student of <strong style="color: #134e4a;">Class 1 (<span id="printCertSection">Section A</span>)</strong>, Roll No: <strong id="printCertRoll" style="color: #134e4a;">01</strong>, in recognition of exemplary academic performance, numerical logic, and arithmetic excellence in the <strong style="color: #0f172a;">Class 1 Annual Mathematics Examination (100 Marks)</strong>.
+      </div>
+
+      <!-- Badges / Scores Table -->
+      <div style="display: flex; justify-content: center; gap: 6mm; margin-bottom: 3mm; position: relative; z-index: 2;">
+        <div style="border: 1.5px solid #0d9488; background: #f0fdfa; padding: 2mm 6mm; border-radius: 4mm; text-align: center; min-width: 38mm;">
+          <span style="display: block; font-size: 6.5pt; font-weight: 800; color: #115e59; text-transform: uppercase;">Marks Secured</span>
+          <span id="printCertMarks" style="font-family: 'Fredoka', cursive; font-size: 15pt; font-weight: 800; color: #0f766e;">98 / 100</span>
+        </div>
+        <div style="border: 1.5px solid #d97706; background: #fffbeb; padding: 2mm 6mm; border-radius: 4mm; text-align: center; min-width: 48mm;">
+          <span style="display: block; font-size: 6.5pt; font-weight: 800; color: #92400e; text-transform: uppercase;">Performance Classification</span>
+          <span id="printCertGrade" style="font-family: 'Fredoka', cursive; font-size: 15pt; font-weight: 800; color: #b45309;">Grade A+ (Distinction)</span>
+        </div>
+      </div>
+
+      <!-- Footer & Signatures -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; padding: 0 5mm; border-top: 1px solid #fed7aa; padding-top: 2mm; position: relative; z-index: 2;">
+        <div style="text-align: center; width: 45mm;">
+          <div id="printCertDate" style="font-size: 8.5pt; font-weight: 700; color: #1e293b; border-bottom: 1px solid #64748b; padding-bottom: 1mm;">
+            October 12, 2026
+          </div>
+          <span style="display: block; font-size: 6.5pt; font-weight: 600; color: #64748b; margin-top: 1mm; text-transform: uppercase;">
+            Date of Examination
+          </span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <div style="width: 14mm; height: 14mm; border-radius: 50%; border: 2px solid #b45309; background: #fffbeb; display: flex; align-items: center; justify-content: center; font-size: 6.5pt; font-weight: 900; color: #92400e; box-shadow: inset 0 0 4px rgba(180,83,9,0.3);">
+            ★ SEAL ★
+          </div>
+          <span style="font-size: 6.5pt; font-weight: 800; color: #78350f; text-transform: uppercase; margin-top: 1mm; letter-spacing: 0.5px;">
+            Holy Child School
+          </span>
+        </div>
+
+        <div style="text-align: center; width: 45mm;">
+          <div style="font-family: 'Great Vibes', cursive; font-size: 17pt; color: #134e4a; border-bottom: 1px solid #64748b; padding-bottom: 0;">
+            Sister Mary
+          </div>
+          <span style="display: block; font-size: 6.5pt; font-weight: 600; color: #64748b; margin-top: 1mm; text-transform: uppercase;">
+            Principal / Headmistress
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Question bank for Holy Child School Class 1 Mathematics Examination (100 Marks total) */
+    const examData = {
+      sectionA: [
+        { id: 1, marks: 1, question: 'What is the number name for 18?', options: ['Eight', 'Eighteen', 'Eighty', 'Eleven'], correct: 'Eighteen' },
+        { id: 2, marks: 1, question: 'What number comes AFTER 49?', options: ['48', '50', '51', '40'], correct: '50' },
+        { id: 3, marks: 1, question: 'What number comes BEFORE 30?', options: ['29', '31', '28', '20'], correct: '29' },
+        { id: 4, marks: 1, question: 'What number comes BETWEEN 68 and 70?', options: ['67', '69', '71', '60'], correct: '69' },
+        { id: 5, marks: 1, question: 'Which number is BIGGER: 45 or 54?', options: ['45', '54'], correct: '54' },
+        { id: 6, marks: 1, question: 'Count by 2s: 2, 4, 6, 8, ____', options: ['9', '10', '12', '7'], correct: '10' },
+        { id: 7, marks: 1, question: 'How many tens are there in the number 60?', options: ['6 tens', '0 tens', '60 tens', '10 tens'], correct: '6 tens' },
+        { id: 8, marks: 1, question: 'In the number 37, which digit is in the ONES place?', options: ['3', '7', '10', '30'], correct: '7' },
+        { id: 9, marks: 1, question: 'Complete the pattern: 5, 10, 15, ____', options: ['16', '18', '20', '25'], correct: '20' },
+        { id: 10, marks: 1, question: 'Which is the smallest 1-digit counting number?', options: ['1', '9', '10', '0'], correct: '1' }
+      ],
+      sectionB: [
+        { id: 11, marks: 2, question: 'Solve: 4 + 5 = ?', options: ['8', '9', '10', '7'], correct: '9' },
+        { id: 12, marks: 2, question: 'Solve: 7 + 3 = ?', options: ['10', '11', '9', '8'], correct: '10' },
+        { id: 13, marks: 2, question: 'Solve: 12 + 6 = ?', options: ['17', '18', '19', '16'], correct: '18' },
+        { id: 14, marks: 2, question: 'Solve: 15 + 4 = ?', options: ['18', '19', '20', '11'], correct: '19' },
+        { id: 15, marks: 2, question: 'Solve: 8 + 0 = ?', options: ['0', '8', '80', '10'], correct: '8' }
+      ],
+      sectionC: [
+        { id: 16, marks: 2, question: 'Solve: 9 - 4 = ?', options: ['4', '5', '6', '3'], correct: '5' },
+        { id: 17, marks: 2, question: 'Solve: 8 - 3 = ?', options: ['4', '5', '6', '2'], correct: '5' },
+        { id: 18, marks: 2, question: 'Solve: 16 - 5 = ?', options: ['10', '11', '12', '9'], correct: '11' },
+        { id: 19, marks: 2, question: 'Solve: 10 - 7 = ?', options: ['2', '3', '4', '5'], correct: '3' },
+        { id: 20, marks: 2, question: 'Solve: 14 - 4 = ?', options: ['10', '11', '8', '14'], correct: '10' }
+      ],
+      sectionD: [
+        { id: 21, marks: 2, question: 'A round coin 🪙 has the flat shape of a:', options: ['Square', 'Circle', 'Triangle'], correct: 'Circle' },
+        { id: 22, marks: 2, question: 'A festive party birthday cap 🥳 looks like a solid 3D shape called a:', options: ['Cone', 'Sphere', 'Cube'], correct: 'Cone' },
+        { id: 23, marks: 2, question: 'How many corners does a triangle 🔺 have?', options: ['2 corners', '3 corners', '4 corners'], correct: '3 corners' },
+        { id: 24, marks: 2, question: 'A school notebook 📖 has the flat shape of a:', options: ['Rectangle', 'Circle', 'Star'], correct: 'Rectangle' },
+        { id: 25, marks: 2, question: 'How many straight sides does a smooth circle have?', options: ['0 sides', '1 side', '4 sides'], correct: '0 sides' }
+      ],
+      sectionE: [
+        { id: 26, marks: 4, question: 'The short hand is at 3 and the long hand is at 12. What time is it?', options: ["3 o'clock", "12 o'clock", "6 o'clock"], correct: "3 o'clock" },
+        { id: 27, marks: 4, question: 'The short hand is at 7 and the long hand is at 12. What time is it?', options: ["7 o'clock", "8 o'clock", "12 o'clock"], correct: "7 o'clock" },
+        { id: 28, marks: 4, question: 'Which day of the week comes directly AFTER Tuesday?', options: ['Monday', 'Wednesday', 'Friday'], correct: 'Wednesday' },
+        { id: 29, marks: 4, question: 'How many days make up one complete week?', options: ['5 days', '7 days', '10 days'], correct: '7 days' },
+        { id: 30, marks: 4, question: 'At what time of day do we eat our morning breakfast?', options: ['Morning', 'Evening', 'Night'], correct: 'Morning' }
+      ],
+      sectionF: [
+        { id: 31, marks: 2, question: 'An elephant 🐘 is ______ than a little mouse 🐁.', options: ['heavier', 'lighter'], correct: 'heavier' },
+        { id: 32, marks: 2, question: 'A long ruler 📏 is ______ than a small eraser.', options: ['longer', 'shorter'], correct: 'longer' },
+        { id: 33, marks: 2, question: 'A tall giraffe 🦒 has a ______ neck.', options: ['tall / long', 'short'], correct: 'tall / long' },
+        { id: 34, marks: 2, question: 'A small teacup ☕ holds ______ water than a big water bucket 🪣.', options: ['less', 'more'], correct: 'less' },
+        { id: 35, marks: 2, question: 'A bird feather 🪶 is very ______.', options: ['light', 'heavy'], correct: 'light' }
+      ],
+      sectionG: [
+        { id: 36, marks: 2, question: 'Add the coins: ₹5 + ₹5 = ?', options: ['₹10', '₹15', '₹8'], correct: '₹10' },
+        { id: 37, marks: 2, question: 'Add the money: ₹10 + ₹2 = ?', options: ['₹11', '₹12', '₹20'], correct: '₹12' },
+        { id: 38, marks: 2, question: 'How many 1-rupee coins (₹1) make ₹5?', options: ['3 coins', '5 coins', '10 coins'], correct: '5 coins' },
+        { id: 39, marks: 2, question: 'Subtract: ₹20 - ₹10 = ?', options: ['₹10', '₹5', '₹15'], correct: '₹10' },
+        { id: 40, marks: 2, question: 'If 1 pencil costs ₹5, what is the cost of 2 pencils? (₹5 + ₹5)', options: ['₹7', '₹10', '₹12'], correct: '₹10' }
+      ],
+      sectionH: [
+        { id: 41, marks: 5, question: 'Ria has 6 red apples. Her mother gave her 4 more apples. How many apples does Ria have in total? (6 + 4)', options: ['8 apples', '10 apples', '12 apples'], correct: '10 apples' },
+        { id: 42, marks: 5, question: 'There were 9 birds sitting on a tree branch. 3 birds flew away into the sky. How many birds are left? (9 - 3)', options: ['5 birds', '6 birds', '7 birds'], correct: '6 birds' },
+        { id: 43, marks: 5, question: 'Sam has a box of 12 crayons. He gives 2 crayons to his sister. How many crayons does Sam have now? (12 - 2)', options: ['10 crayons', '11 crayons', '14 crayons'], correct: '10 crayons' },
+        { id: 44, marks: 5, question: 'Kabir has 8 toy cars. For his birthday, his uncle gave him 5 more toy cars. How many toy cars does Kabir have altogether? (8 + 5)', options: ['12 cars', '13 cars', '14 cars'], correct: '13 cars' }
+      ]
+    };
+
+    let userAnswers = {};
+    let timerSeconds = 60 * 60;
+    let timerInterval = null;
+    let isTimerRunning = false;
+
+    window.onload = function() {
+      renderSection('sectionA', examData.sectionA, 'sky');
+      renderSection('sectionB', examData.sectionB, 'emerald');
+      renderSection('sectionC', examData.sectionC, 'rose');
+      renderSection('sectionD', examData.sectionD, 'purple');
+      renderSection('sectionE', examData.sectionE, 'amber');
+      renderSection('sectionF', examData.sectionF, 'cyan');
+      renderSection('sectionG', examData.sectionG, 'teal');
+      renderSection('sectionH', examData.sectionH, 'indigo');
+
+      startTimer();
+      updateProgressBar();
+    };
+
+    function renderSection(containerKey, list, colorTheme) {
+      const container = document.getElementById(`${containerKey}_container`);
+      container.innerHTML = list.map(q => `
+        <div id="card-${q.id}" class="bg-slate-50/70 hover:bg-white rounded-2xl p-4 border-2 border-slate-200 transition-all">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-full bg-${colorTheme}-600 text-white font-fun font-bold flex items-center justify-center text-xs">
+                ${q.id}
+              </span>
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">${q.marks} Marks</span>
+            </div>
+            <button onclick="readQuestionText('${escapeString(q.question)}', ${JSON.stringify(q.options).replace(/"/g, '&quot;')})" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 active:scale-95 text-amber-900 rounded-lg text-xs font-bold flex items-center gap-1 transition">
+              <span>🔊</span>
+              <span>Listen</span>
+            </button>
+          </div>
+          <p class="font-bold text-slate-900 text-base mb-3">${q.question}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            ${q.options.map(opt => `
+              <button type="button" 
+                id="btn-${q.id}-${sanitize(opt)}" 
+                onclick="chooseOption(${q.id}, '${escapeString(opt)}', '${colorTheme}')"
+                class="opt-btn-${q.id} text-left px-4 py-2.5 rounded-xl border-2 border-slate-200 bg-white hover:bg-${colorTheme}-50 hover:border-${colorTheme}-400 font-bold text-sm text-slate-800 flex items-center justify-between active:scale-[0.99] transition">
+                <span>${opt}</span>
+                <span class="indicator w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px]"></span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function chooseOption(questionId, val, colorTheme) {
+      userAnswers[questionId] = val;
+      const buttons = document.querySelectorAll(`.opt-btn-${questionId}`);
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-teal-600', 'text-white', 'shadow-md');
+        btn.classList.add('bg-white', 'text-slate-800', 'border-slate-200');
+        const ind = btn.querySelector('.indicator');
+        if (ind) {
+          ind.innerHTML = '';
+          ind.classList.remove('bg-white', 'text-teal-600', 'border-white');
+          ind.classList.add('border-slate-300');
+        }
+      });
+
+      const active = document.getElementById(`btn-${questionId}-${sanitize(val)}`);
+      if (active) {
+        active.classList.remove('bg-white', 'text-slate-800', 'border-slate-200');
+        active.classList.add('bg-teal-600', 'text-white', 'shadow-md');
+        const ind = active.querySelector('.indicator');
+        if (ind) {
+          ind.innerHTML = '✓';
+          ind.classList.remove('border-slate-300');
+          ind.classList.add('bg-white', 'text-teal-600', 'border-white');
+        }
+      }
+
+      const card = document.getElementById(`card-${questionId}`);
+      card.classList.remove('border-slate-200');
+      card.classList.add('border-teal-400', 'bg-teal-50/30');
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const answered = Object.keys(userAnswers).length;
+      const total = 39;
+      document.getElementById('progressText').innerText = `${answered} / ${total} Answered`;
+      const pct = (answered / total) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function startTimer() {
+      isTimerRunning = true;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          renderTimer();
+        } else {
+          clearInterval(timerInterval);
+          speakText("Time is up! Submitting your Holy Child School Mathematics exam now.");
+          submitExam();
+        }
+      }, 1000);
+      renderTimer();
+    }
+
+    function renderTimer() {
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      document.getElementById('timerDisplay').innerText = 
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timerToggleBtn');
+      if (isTimerRunning) {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        btn.innerText = "Resume";
+      } else {
+        startTimer();
+        btn.innerText = "Pause";
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerSeconds = 60 * 60;
+      renderTimer();
+      startTimer();
+      document.getElementById('timerToggleBtn').innerText = "Pause";
+    }
+
+    function speakText(txt) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(txt);
+      u.rate = 0.85;
+      u.pitch = 1.1;
+      u.lang = 'en-US';
+      window.speechSynthesis.speak(u);
+    }
+
+    function readQuestionText(question, options) {
+      const full = `${question}. Options are: ${options.join(', ')}`;
+      speakText(full);
+    }
+
+    function submitExam() {
+      clearInterval(timerInterval);
+      const rawName = document.getElementById('studentName').value.trim();
+      const studentName = rawName || 'Child of Holy Child School';
+      const studentRoll = document.getElementById('studentRoll').value.trim() || 'HCS-MATH-01';
+      const studentSection = document.getElementById('studentSection').value || 'A';
+
+      const allQ = [
+        ...examData.sectionA,
+        ...examData.sectionB,
+        ...examData.sectionC,
+        ...examData.sectionD,
+        ...examData.sectionE,
+        ...examData.sectionF,
+        ...examData.sectionG,
+        ...examData.sectionH
+      ];
+
+      let totalScore = 0;
+      let reviewHtml = '';
+
+      allQ.forEach(q => {
+        const ans = userAnswers[q.id];
+        const isRight = ans && ans.trim().toLowerCase() === q.correct.trim().toLowerCase();
+        if (isRight) totalScore += q.marks;
+
+        reviewHtml += `
+          <div class="p-2.5 rounded-xl border text-xs ${isRight ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}">
+            <div class="flex justify-between font-bold mb-1">
+              <span>Q${q.id}. ${q.question}</span>
+              <span class="${isRight ? 'text-emerald-700' : 'text-rose-600'}">
+                ${isRight ? `+${q.marks} Marks` : '0 Marks'}
+              </span>
+            </div>
+            <div class="text-slate-600">
+              Your answer: <strong class="${isRight ? 'text-emerald-800' : 'text-rose-700'}">${ans || 'Skipped'}</strong>
+              ${!isRight ? ` | Correct answer: <strong class="text-teal-800">${q.correct}</strong>` : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      let grade = 'A+';
+      let distinctionText = 'Grade A+ (Distinction)';
+      let stars = '⭐⭐⭐⭐⭐';
+      let badge = '🏆';
+      let feedback = 'Outstanding performance! You solved all the math problems with brilliance.';
+
+      if (totalScore < 40) {
+        grade = 'C';
+        distinctionText = 'Grade C (Needs Practice)';
+        stars = '⭐⭐';
+        badge = '🌱';
+        feedback = 'Good effort! Practice your counting, addition, and subtraction every day.';
+      } else if (totalScore < 70) {
+        grade = 'B';
+        distinctionText = 'Grade B (Good Effort)';
+        stars = '⭐⭐⭐';
+        badge = '⭐';
+        feedback = 'Well done! A little more practice with word problems will get you full marks.';
+      } else if (totalScore < 90) {
+        grade = 'A';
+        distinctionText = 'Grade A (Excellent)';
+        stars = '⭐⭐⭐⭐';
+        badge = '🎖️';
+        feedback = 'Excellent math skills! You did wonderful calculations and reasoning.';
+      }
+
+      // Update screen modal
+      document.getElementById('modalStudentTitle').innerText = `${studentName} • Roll No: ${studentRoll}`;
+      document.getElementById('modalMarksObtained').innerText = `${totalScore} / 100`;
+      document.getElementById('modalPercentage').innerText = `${totalScore}%`;
+      document.getElementById('modalGrade').innerText = grade;
+      document.getElementById('modalStars').innerText = stars;
+      document.getElementById('modalBadge').innerText = badge;
+      document.getElementById('modalFeedback').innerText = feedback;
+      document.getElementById('detailedReviewList').innerHTML = reviewHtml;
+
+      // Update screen certificate preview
+      document.getElementById('screenCertStudentName').innerText = studentName;
+      document.getElementById('screenCertRoll').innerText = studentRoll;
+      document.getElementById('screenCertSection').innerText = `Sec ${studentSection}`;
+      document.getElementById('screenCertMarks').innerText = `${totalScore} / 100`;
+      document.getElementById('screenCertGrade').innerText = distinctionText;
+      
+      const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      document.getElementById('screenCertDate').innerText = today;
+
+      // Update print-only certificate (Strict A4 container)
+      document.getElementById('printCertStudentName').innerText = studentName;
+      document.getElementById('printCertRoll').innerText = studentRoll;
+      document.getElementById('printCertSection').innerText = `Section ${studentSection}`;
+      document.getElementById('printCertMarks').innerText = `${totalScore} / 100`;
+      document.getElementById('printCertGrade').innerText = distinctionText;
+      document.getElementById('printCertDate').innerText = today;
+
+      document.getElementById('resultModal').classList.remove('hidden');
+      speakText(`Congratulations ${studentName}! You scored ${totalScore} out of 100 with Grade ${grade}. Holy Child School has generated your single page certificate!`);
+    }
+
+    function triggerPrintCertificate() {
+      // Trigger native browser print which respects @media print and prints only #print-certificate-container
+      window.print();
+    }
+
+    function toggleDetailedReview() {
+      const panel = document.getElementById('detailedReviewContainer');
+      const btn = document.getElementById('reviewToggleBtn');
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btn.innerText = "Hide Solution Sheet";
+      } else {
+        panel.classList.add('hidden');
+        btn.innerText = "View Solution Sheet 📋";
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('resultModal').classList.add('hidden');
+    }
+
+    function resetAnswers() {
+      userAnswers = {};
+      renderSection('sectionA', examData.sectionA, 'sky');
+      renderSection('sectionB', examData.sectionB, 'emerald');
+      renderSection('sectionC', examData.sectionC, 'rose');
+      renderSection('sectionD', examData.sectionD, 'purple');
+      renderSection('sectionE', examData.sectionE, 'amber');
+      renderSection('sectionF', examData.sectionF, 'cyan');
+      renderSection('sectionG', examData.sectionG, 'teal');
+      renderSection('sectionH', examData.sectionH, 'indigo');
+      updateProgressBar();
+    }
+
+    function sanitize(str) {
+      return String(str).replace(/[^a-zA-Z0-9]/g, '_');
+    }
+
+    function escapeString(str) {
+      return String(str).replace(/'/g, "\\'");
+    }
+  </script>
+</body>
+</html>
